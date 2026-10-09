@@ -9,6 +9,10 @@ A browser-based operating system with draggable windows, a live clock, an intera
 |---|---|
 | ![Projects app](screenshots/projects.png) | ![Vigenère app cracking a ciphertext](screenshots/vigenere.png) |
 | **Projects** | **Vigenère** — statistical attack recovering the key |
+| ![Terminal running neofetch](screenshots/terminal.png) | ![GrapheneOS guide inside MiOS](screenshots/grapheneos.png) |
+| **Terminal** — `neofetch` and the fake file system | **GrapheneOS Guide** |
+| ![Sticky notes on the desktop](screenshots/notes.png) | |
+| **Sticky notes** and About me | |
 
 ## What's included
 
