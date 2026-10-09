@@ -1,4 +1,4 @@
-# MiOS  (WebOS 1 — Hack Club)
+# MiOS (WebOS 1 — Hack Club)
 A browser-based operating system with draggable windows, a live clock, an interactive terminal, and sticky notes. Built with vanilla HTML, CSS, and JavaScript.
 
 ---
@@ -11,8 +11,8 @@ A browser-based operating system with draggable windows, a live clock, an intera
 | **Projects** | **Vigenère** — statistical attack recovering the key |
 | ![Terminal running neofetch](screenshots/terminal.png) | ![GrapheneOS guide inside MiOS](screenshots/grapheneos.png) |
 | **Terminal** — `neofetch` and the fake file system | **GrapheneOS Guide** |
-| ![Sticky notes on the desktop](screenshots/notes.png) | |
-| **Sticky notes** and About me | |
+| ![Sticky notes on the desktop](screenshots/notes.png) | ![SessionStats app with a sample run loaded](screenshots/sessionstats.png) |
+| **Sticky notes** and About me | **SessionStats** — stats card from a GPX workout |
 
 ## What's included
 
