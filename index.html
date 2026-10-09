@@ -1,145 +1,264 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-wallpaper="aurora">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MiOS — a portfolio disguised as a browser-based operating system." />
     <title>MiOS</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      /* apply the saved wallpaper and skip the boot screen before the first paint */
+      try {
+        var savedWallpaper = JSON.parse(localStorage.getItem("mios.wallpaper"));
+        if (savedWallpaper) document.documentElement.dataset.wallpaper = savedWallpaper;
+        if (sessionStorage.getItem("mios.booted") === "1") document.documentElement.classList.add("booted");
+      } catch (e) {}
+    </script>
   </head>
 
   <body>
+    <!-- boot screen -->
+    <div id="boot" class="boot" aria-hidden="true">
+      <div class="boot-logo"><span class="boot-mark"></span>MiOS</div>
+      <div class="boot-spinner"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+
     <!-- topbar -->
-    <div id="top" class="topbar">
-      <div class="topbar-left">
-        <span class="logo" id="welcomeopen">⌂ MiOS</span>
-        <span class="menu-item" id="aboutopen">About</span>
-        <span class="menu-item" id="projectsopen">Projects</span>
-        <span class="menu-item" id="terminalopen">Terminal</span>
-        <span class="menu-item" id="contactopen">Contact</span>
-        <span class="menu-item" id="notasnew">+ Note</span>
-      </div>
+    <header class="topbar">
+      <nav class="topbar-left" aria-label="Main menu">
+        <button type="button" class="logo" data-open="welcome"><span class="logo-mark"></span>MiOS</button>
+        <button type="button" class="menu-item" data-open="about">About</button>
+        <button type="button" class="menu-item" data-open="projects">Projects</button>
+        <button type="button" class="menu-item" data-open="terminal">Terminal</button>
+        <button type="button" class="menu-item" data-open="contact">Contact</button>
+        <button type="button" class="menu-item" data-open="notes">+ Note</button>
+      </nav>
       <div class="topbar-right">
-        <span class="pill" id="batteryElement">🔋 100%</span>
-        <span class="pill" id="timeElement">...</span>
+        <span class="pill" id="batteryElement" hidden></span>
+        <span class="pill" id="timeElement"></span>
       </div>
-    </div>
+    </header>
 
-    <!-- desktop icons -->
-    <div id="desktopApps">
-      <div class="appicon" data-window="welcome">
-        <div class="appicon-img">👋</div>
-        <p class="appicon-label">Welcome</p>
-      </div>
-      <div class="appicon" data-window="about">
-        <div class="appicon-img">📒</div>
-        <p class="appicon-label">About me</p>
-      </div>
-      <div class="appicon" data-window="projects">
-        <div class="appicon-img">🧩</div>
-        <p class="appicon-label">Projects</p>
-      </div>
-      <div class="appicon" data-window="terminal">
-        <div class="appicon-img">💻</div>
-        <p class="appicon-label">Terminal</p>
-      </div>
-      <div class="appicon" data-window="contact">
-        <div class="appicon-img">✉️</div>
-        <p class="appicon-label">Contact</p>
-      </div>
-      <div class="appicon" id="notasicon">
-        <div class="appicon-img">📝</div>
-        <p class="appicon-label">Notes</p>
-      </div>
-    </div>
+    <main id="desktop" class="desktop">
+      <!-- desktop icons (generated in script.js) -->
+      <div id="desktopIcons" class="desktop-icons"></div>
 
-    <!-- welcome window -->
-    <div class="window" id="welcome" style="top: calc(50% - 170px); left: calc(50% - 230px); width: 460px;">
-      <div class="windowheader" id="welcomeheader">
-        <div class="closebutton" id="welcomeclose"></div>
-        <p class="headertext">Welcome</p>
-        <div class="header-spacer"></div>
-      </div>
-      <div class="window-body">
-        <h1 style="margin: 0 0 4px;">Hello! 👋</h1>
-        <p style="margin: 0 0 12px; opacity: 0.7;">Welcome to <strong>MiOS</strong></p>
-        <p>
-          This is not a regular webpage — it's a small operating system.
-          Instead of just reading about me, <strong>explore it</strong>.
-        </p>
-        <p style="opacity: 0.8;">
-          🖱️ <em>Double-click</em> the desktop icons or use the top menu.
-          Windows can be <em>dragged</em> from their title bar and closed with the red button.
-        </p>
-        <p style="opacity: 0.8;">
-          In a hurry? Open the <strong>Terminal</strong> and type <code>help</code>.
-        </p>
-      </div>
-    </div>
-
-    <!-- about window -->
-    <div class="window" id="about" style="top: calc(50% - 240px); left: calc(50% - 280px); display: none;">
-      <div class="windowheader" id="aboutheader">
-        <div class="closebutton" id="aboutclose"></div>
-        <p class="headertext" id="abouttitle">About me</p>
-        <div class="header-spacer"></div>
-      </div>
-      <div class="app-pane app-pane--split">
-        <div id="sidebar" class="sidebar"></div>
-        <div id="contentDisplay" class="content-display"></div>
-      </div>
-    </div>
-
-    <!-- projects window -->
-    <div class="window" id="projects" style="top: calc(50% - 230px); left: calc(50% - 260px); display: none;">
-      <div class="windowheader" id="projectsheader">
-        <div class="closebutton" id="projectsclose"></div>
-        <p class="headertext">Projects</p>
-        <div class="header-spacer"></div>
-      </div>
-      <div class="app-pane">
-        <div id="projectGrid" class="project-grid"></div>
-      </div>
-    </div>
-
-    <!-- terminal window -->
-    <div class="window window--dark" id="terminal" style="top: calc(50% - 200px); left: calc(50% - 320px); display: none;">
-      <div class="windowheader" id="terminalheader">
-        <div class="closebutton" id="terminalclose"></div>
-        <p class="headertext">eroga@webOS: ~</p>
-        <div class="header-spacer"></div>
-      </div>
-      <div class="terminal-body" id="terminalBody">
-        <div id="terminalOutput"></div>
-        <div class="terminal-input-line">
-          <span class="terminal-prompt">eroga@webOS:~$</span>
-          <input
-            type="text"
-            id="terminalInput"
-            class="terminal-input"
-            autocomplete="off"
-            spellcheck="false"
-            autofocus
-          />
+      <!-- welcome window -->
+      <section class="window is-closed" id="welcome" role="dialog" aria-labelledby="welcome-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="welcome-title">Welcome</h2>
+        </header>
+        <div class="window-body">
+          <h1>Hello! 👋</h1>
+          <p class="lead">Welcome to <strong>MiOS</strong>, my portfolio disguised as an operating system.</p>
+          <p>Instead of just reading about me, <strong>explore it</strong>.</p>
+          <ul class="hint-list">
+            <li><strong>Open apps</strong> by double-clicking the desktop icons (tap on mobile), or from the dock and the top menu.</li>
+            <li><strong>Move &amp; resize</strong> windows from the title bar and the bottom-right corner. Double-click a title bar to maximize.</li>
+            <li><strong>In a hurry?</strong> Open the Terminal and type <code>help</code>.</li>
+            <li><kbd>Esc</kbd> closes the active window.</li>
+          </ul>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- contact window -->
-    <div class="window" id="contact" style="top: calc(50% - 160px); left: calc(50% - 190px); display: none;">
-      <div class="windowheader" id="contactheader">
-        <div class="closebutton" id="contactclose"></div>
-        <p class="headertext">Contact</p>
-        <div class="header-spacer"></div>
-      </div>
-      <div class="window-body" style="width: 320px;">
-        <p style="margin-top: 0;">Want to say hi? Find me here:</p>
-        <a class="contact-link" href="https://hackclub.com/" target="_blank" rel="noopener">⚡ Hack Club</a>
-        <p style="margin-top: 12px; font-size: 13px; opacity: 0.7; margin-bottom: 0;">
-          No public social media for now — but I'm on Hack Club!
-        </p>
-      </div>
-    </div>
+      <!-- about window -->
+      <section class="window is-closed" id="about" role="dialog" aria-labelledby="about-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="about-title">About me</h2>
+        </header>
+        <div class="window-body window-body--pane">
+          <div class="pane split">
+            <nav id="aboutSidebar" class="sidebar" aria-label="About sections"></nav>
+            <article id="aboutContent" class="content-display"></article>
+          </div>
+        </div>
+      </section>
+
+      <!-- projects window -->
+      <section class="window is-closed" id="projects" role="dialog" aria-labelledby="projects-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="projects-title">Projects</h2>
+        </header>
+        <div class="window-body window-body--pane">
+          <div class="pane">
+            <div id="projectGrid" class="project-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- terminal window -->
+      <section class="window window--dark is-closed" id="terminal" role="dialog" aria-labelledby="terminal-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="terminal-title">eroga@MiOS: ~</h2>
+        </header>
+        <div class="window-body terminal-body" id="terminalBody">
+          <div id="terminalOutput" aria-live="polite"></div>
+          <div class="terminal-input-line">
+            <label class="terminal-prompt" id="terminalPrompt" for="terminalInput">eroga@MiOS:~$</label>
+            <input
+              type="text"
+              id="terminalInput"
+              class="terminal-input"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- vigenère window (port of Pygenère) -->
+      <section class="window is-closed" id="vigenere" role="dialog" aria-labelledby="vigenere-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="vigenere-title">Vigenère</h2>
+        </header>
+        <div class="window-body vig">
+          <div class="segmented" role="tablist" aria-label="Vigenère tools">
+            <button type="button" role="tab" data-tab="cipher" aria-selected="true">Encrypt / Decrypt</button>
+            <button type="button" role="tab" data-tab="stats" aria-selected="false">Statistical attack</button>
+            <button type="button" role="tab" data-tab="brute" aria-selected="false">Brute force</button>
+            <button type="button" role="tab" data-tab="bench" aria-selected="false">Benchmark</button>
+          </div>
+
+          <div class="vig-panel" data-panel="cipher" role="tabpanel">
+            <label class="field">
+              <span>Text</span>
+              <textarea id="vigText" rows="4" placeholder="Write a message…" spellcheck="false"></textarea>
+            </label>
+            <div class="vig-actions">
+              <label class="field field--inline field--grow">
+                <span>Key</span>
+                <input id="vigKey" type="text" placeholder="e.g. MIOS" autocomplete="off" spellcheck="false" />
+              </label>
+              <button type="button" class="btn btn--primary" id="vigEncrypt">Encrypt</button>
+              <button type="button" class="btn" id="vigDecrypt">Decrypt</button>
+            </div>
+            <p class="vig-error" id="vigError" hidden></p>
+            <div class="vig-output" id="vigOutput" hidden>
+              <pre class="vig-result" id="vigResult"></pre>
+              <div class="vig-actions">
+                <button type="button" class="btn btn--small" id="vigCopy">Copy</button>
+                <button type="button" class="btn btn--small" id="vigCrack">Try to crack it →</button>
+              </div>
+            </div>
+            <p class="vig-note">
+              Letters A–Z are encrypted; numbers and spaces are kept as they are. Accents are removed, Ñ becomes N,
+              and other symbols are dropped.
+            </p>
+          </div>
+
+          <div class="vig-panel" data-panel="stats" role="tabpanel" hidden>
+            <p class="vig-note">
+              Splits the ciphertext into columns for every key length and compares each column with the letter
+              frequencies of the language chosen below (χ²). Works best with a few hundred letters.
+            </p>
+            <label class="field">
+              <span>Ciphertext</span>
+              <textarea id="statsText" rows="4" spellcheck="false"></textarea>
+            </label>
+            <div class="vig-actions">
+              <label class="field field--inline">
+                <span>Max key length</span>
+                <input id="statsMax" class="input-short" type="number" min="1" max="30" value="20" />
+              </label>
+              <button type="button" class="btn btn--primary" id="statsRun">Run attack</button>
+              <button type="button" class="btn" data-example>Load example</button>
+            </div>
+            <div class="vig-results" id="statsResult"></div>
+          </div>
+
+          <div class="vig-panel" data-panel="brute" role="tabpanel" hidden>
+            <p class="vig-note">
+              Tries every possible key up to the chosen length (26<sup>L</sup> combinations) and ranks them with χ².
+              Each extra letter multiplies the work by 26.
+            </p>
+            <label class="field">
+              <span>Ciphertext</span>
+              <textarea id="bruteText" rows="4" spellcheck="false"></textarea>
+            </label>
+            <div class="vig-actions">
+              <label class="field field--inline">
+                <span>Max key length</span>
+                <select id="bruteMax">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4" selected>4</option>
+                  <option value="5">5 (slow)</option>
+                </select>
+              </label>
+              <button type="button" class="btn btn--primary" id="bruteRun">Start</button>
+              <button type="button" class="btn" id="bruteCancel" hidden>Cancel</button>
+              <button type="button" class="btn" data-example>Load example</button>
+            </div>
+            <div class="vig-results" id="bruteResult"></div>
+          </div>
+
+          <div class="vig-panel" data-panel="bench" role="tabpanel" hidden>
+            <p class="vig-note">
+              Measures how many full decryptions per second your browser can do, then estimates how long a brute force
+              attack would take for each key length.
+            </p>
+            <div class="vig-actions">
+              <button type="button" class="btn btn--primary" id="benchRun">Run benchmark</button>
+            </div>
+            <div class="vig-results" id="benchResult"></div>
+          </div>
+
+          <div class="vig-footer">
+            <div class="vig-lang">
+              <span id="vigLangLabel">Attack language</span>
+              <div class="segmented segmented--small" role="radiogroup" aria-labelledby="vigLangLabel">
+                <button type="button" role="radio" data-lang="es" aria-checked="true">Español</button>
+                <button type="button" role="radio" data-lang="en" aria-checked="false">English</button>
+              </div>
+            </div>
+            <p class="vig-note" id="vigLangNote"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- grapheneos guide window -->
+      <section class="window is-closed" id="grapheneos" role="dialog" aria-labelledby="grapheneos-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="grapheneos-title">GrapheneOS Guide</h2>
+        </header>
+        <div class="window-body window-body--pane">
+          <div class="pane split">
+            <nav id="grapheneSidebar" class="sidebar" aria-label="GrapheneOS guide sections"></nav>
+            <article id="grapheneContent" class="content-display"></article>
+          </div>
+        </div>
+      </section>
+
+      <!-- contact window -->
+      <section class="window is-closed" id="contact" role="dialog" aria-labelledby="contact-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="contact-title">Contact</h2>
+        </header>
+        <div class="window-body">
+          <p class="lead">Want to say hi? Find me here:</p>
+          <div id="contactList" class="contact-list"></div>
+          <p class="footnote">Find my code on GitHub, or get in touch on LinkedIn.</p>
+        </div>
+      </section>
+
+      <!-- wallpaper window -->
+      <section class="window is-closed" id="wallpaper" role="dialog" aria-labelledby="wallpaper-title" inert>
+        <header class="window-header">
+          <h2 class="window-title" id="wallpaper-title">Wallpaper</h2>
+        </header>
+        <div class="window-body">
+          <p class="lead">Pick a wallpaper. It's remembered for your next visit.</p>
+          <div id="wallpaperGrid" class="wallpaper-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- dock (generated in script.js) -->
+    <nav id="dock" class="dock" aria-label="Dock"></nav>
 
     <script src="script.js"></script>
   </body>
 </html>
+
