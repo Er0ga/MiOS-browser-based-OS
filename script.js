@@ -1017,8 +1017,8 @@ function renderWallpapers() {
   });
 }
 renderWallpapers();
-if (!setWallpaper(store.get("wallpaper", "aurora"))) setWallpaper("aurora");
-
+if (!setWallpaper(store.get("wallpaper", "midnight"))) setWallpaper("midnight");
+   
 /* ===========================================================
    11. VIGENÈRE APP
    Port of Pygenère (github.com/Ager90/Cifrado-Vigenere-Proyecto):
