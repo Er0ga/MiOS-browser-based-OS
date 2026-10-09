@@ -3,6 +3,12 @@ A browser-based operating system with draggable windows, a live clock, an intera
 
 ---
 ![MiOS desktop with the Welcome window](screenshots/desktop.png)
+## Screenshots
+
+| | |
+|---|---|
+| ![Projects app](screenshots/projects.png) | ![Vigenère app cracking a ciphertext](screenshots/vigenere.png) |
+| **Projects** | **Vigenère** — statistical attack recovering the key |
 
 ## What's included
 
